@@ -6,7 +6,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:8080'  // Replace with the frontend URL
+    origin: '*'  // Replace with the frontend URL
   }));
 
 
@@ -44,7 +44,7 @@ const carSchema = new mongoose.Schema({
       trim: true,
     },
     rentPerMonth: {
-      type: Number,
+      type: Numbear,
       required: true,
       min: 0, // Rent cannot be negative
     },
