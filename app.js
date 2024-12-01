@@ -44,7 +44,7 @@ const carSchema = new mongoose.Schema({
       trim: true,
     },
     rentPerMonth: {
-      type: Numbear,
+      type: Number,
       required: true,
       min: 0, // Rent cannot be negative
     },
