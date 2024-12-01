@@ -6,7 +6,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:8080/'  // Replace with the frontend URL
+    origin: 'http://localhost:8080'  // Replace with the frontend URL
   }));
 
 
@@ -103,12 +103,9 @@ app.get('/api/cars/:name', async (req, res) => {
     try {
       const carName = req.params.name; // Extract the car name from the URL parameter
       const car = await Car.findOne({ name: carName }); // Search for a car by name
+      console.log(car);
       
-      if (!car) {
-        return res.status(404).json({ message: 'Car not found' }); // Handle case when car is not found
-      }
-  
-      res.json(car); // Respond with the found car
+      res.status(200).json(car); // Respond with the found car
     } catch (err) {
       res.status(500).json({ message: err.message }); // Handle server errors
     }
