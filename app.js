@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
-const serverless = require('serverless-http');
+
 
 // Middleware
 app.use(cors({
@@ -117,5 +117,5 @@ app.get('/api/cars/:name', async (req, res) => {
   
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-module.exports.handler = serverless(app);
+
 

@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "build": "netlify deploy --prod"
+    "build": "netlify deploy --prod",
+    "dev": "nodemon app.js"
   },
   "engines": {
     "node": "23.x"
@@ -19,6 +20,7 @@
     "mongoose": "^8.8.2",
     "netlify-cli": "^17.37.2",
     "netlify-lambda": "^2.0.16",
+    "nodemon": "^3.1.7",
     "serverless-http": "^3.2.0"
   },
   "description": ""
