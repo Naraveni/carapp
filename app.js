@@ -1,13 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+// const cors = require('cors');
 const app = express();
 
 
-// Middleware
-app.use(cors({
-    origin: '*'  // Replace with the frontend URL
-  }));
+// // Middleware
+// app.use(cors({
+//     origin: '*'  // Replace with the frontend URL
+//   }));
 
 
 app.use(express.json());
