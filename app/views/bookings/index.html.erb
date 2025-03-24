@@ -1,0 +1,41 @@
+<div class="container mx-auto p-8">
+  <h1 class="text-2xl font-semibold text-center mb-6">My Bookings</h1>
+
+  <% if @bookings.any? %>
+    <table class="min-w-full table-auto bg-white rounded-lg shadow-lg">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Car Name</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Pick Up Spot</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Start Date</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">End Date</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total Cost</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Modify Booking</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @bookings.each do |booking| %>
+          <tr class="border-b">
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.car.model %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.pick_up_spot %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.start_date.strftime('%B %d, %Y') %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.end_date.strftime('%B %d, %Y') %></td>
+            <td class="px-4 py-2 text-sm text-gray-700">
+              <%= number_to_currency((booking.car.price_per_day * (booking.end_date - booking.start_date).to_i + booking.insurance_per_day * (booking.end_date - booking.start_date).to_i).abs, unit: "$") %>
+            </td>
+            <td class="px-4 py-2 text-sm text-gray-700">
+              <% if booking.start_date > Date.today %>
+                <%= link_to 'Modify Booking', edit_booking_path(booking), class: 'text-blue-500 hover:underline' %>
+              <% else %>
+                <span class="text-red-500">Cannot modify, booking has started</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-center text-gray-600">You have no bookings yet.</p>
+  <% end %>
+</div>

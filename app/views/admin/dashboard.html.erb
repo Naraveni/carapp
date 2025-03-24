@@ -1,0 +1,112 @@
+<div class="mb-6">
+  <%= form_with url: admin_dashboard_path, method: :get, local: true, class: 'flex justify-center space-x-4' do |form| %>
+    <div class="flex items-center">
+      <%= form.label :start_date, 'Start Date:', class: 'mr-2' %>
+      <%= form.date_field :start_date, value: @start_date, class: 'px-4 py-2 border border-gray-300 rounded-md' %>
+    </div>
+
+    <div class="flex items-center">
+      <%= form.label :end_date, 'End Date:', class: 'mr-2' %>
+      <%= form.date_field :end_date, value: @end_date, class: 'px-4 py-2 border border-gray-300 rounded-md' %>
+    </div>
+
+    <%= form.submit 'Filter', class: 'bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200' %>
+  <% end %>
+
+  <!-- Send CSV Button: Make sure to include start_date and end_date here -->
+  <%= button_to send_csv_admin_dashboard_path(start_date: @start_date, end_date: @end_date), method: :post, class: 'bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200'  do %>
+    Send CSV Over Email
+  <% end %>
+</div>
+
+
+  <!-- Revenue Breakdown -->
+  <div class="mb-6">
+    <h2 class="text-2xl font-semibold text-gray-800">Total Revenue Breakdown</h2>
+    <p class="text-lg">Total Revenue: <%= number_to_currency(@total_revenue, unit: "$") %></p>
+    <p class="text-lg">Car Price: <%= number_to_currency(@total_car_price, unit: "$") %></p>
+    <p class="text-lg">Insurance Cost: <%= number_to_currency(@total_insurance, unit: "$") %></p>
+  </div>
+
+  <!-- Bar Chart for Monthly Revenue and Insurance -->
+  <div class="mb-6">
+    <h2 class="text-2xl font-semibold text-gray-800">Monthly Revenue and Insurance Breakdown</h2>
+    <canvas id="monthlyChart" class="w-full" style="height: 400px;"></canvas>
+  </div>
+
+  <!-- Bookings Table -->
+  <% if @bookings.any? %>
+    <table class="min-w-full table-auto bg-white rounded-lg shadow-lg">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Car Name</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Pick Up Spot</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Start Date</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">End Date</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total Cost</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @bookings.each do |booking| %>
+          <tr class="border-b">
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.car.model %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.pick_up_spot %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.start_date.strftime('%B %d, %Y') %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= booking.end_date.strftime('%B %d, %Y') %></td>
+            <td class="px-4 py-2 text-sm text-gray-700">
+              <%= number_to_currency((booking.car.price_per_day * (booking.end_date - booking.start_date).to_i + booking.insurance_per_day * (booking.end_date - booking.start_date).to_i).abs, unit: "$") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-center text-gray-600">No bookings found for this date range.</p>
+  <% end %>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+
+    // Ensure @monthly_data is passed to JavaScript
+    const labels = <%= raw @monthly_data.present? ? @monthly_data.map { |data| data[:month] }.to_json : "[]" %>;
+    const rentData = <%= @monthly_data.present? ? @monthly_data.map { |data| data[:total_rent].to_f }.to_json : "[]" %>;
+    const insuranceData = <%= @monthly_data.present? ? @monthly_data.map { |data| data[:total_insurance].to_f }.to_json : "[]" %>;
+
+    const chartData = {
+      labels: labels.length > 0 ? labels : ["No Data"],
+      datasets: [{
+        label: 'Total Rent',
+        data: rentData.length > 0 ? rentData : [0],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }, {
+        label: 'Total Insurance',
+        data: insuranceData.length > 0 ? insuranceData : [0],
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    };
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: chartData,
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '$' + value.toFixed(2);
+              }
+            }
+          }
+        }
+      }
+    });
+  });
+</script>

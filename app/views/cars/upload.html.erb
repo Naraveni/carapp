@@ -1,0 +1,42 @@
+<div class="container mx-auto p-8">
+  <h1 class="text-2xl font-semibold mb-6">Bulk Upload Cars</h1>
+<% if flash[:error] %>
+  <div class="bg-red-500 text-white p-4 rounded-md mb-4">
+    <%= flash[:error] %>
+  </div>
+<% end %>
+<% if flash[:success] %>
+  <div class="bg-green-500 text-white p-4 rounded-md mb-4">
+    <%= flash[:success] %>
+  </div>
+<% end %>
+  
+  <div class="mb-4">
+    <button class="bg-blue-800">
+  <a href="<%= download_csv_template_cars_path %>" class="underline  bg-orange-500 text-black px-6 py-2 rounded-md hover:bg-orange-600">
+    Download CSV Template
+  </a>
+  </button>
+</div>
+
+  <!-- Upload CSV Form (Initially Hidden) -->
+  <div id="uploadForm" class="bg-white p-6 rounded shadow-md hidden">
+    <h2 class="text-lg font-semibold mb-4">Upload CSV</h2>
+    <%= form_with url: upload_csv_cars_path, method: :post, local: true, multipart: true, id: "csvForm" do |form| %>
+      <div class="mb-4">
+        <%= form.file_field :file, class: "block w-full px-4 py-2 border rounded-md" %>
+      </div>
+
+      <!-- Submit Button -->
+      <%= form.submit "Upload CSV", class: "bg-green-500 text-black px-6 py-2 rounded-md hover:bg-green-600" %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  // Toggle upload form visibility on button click
+  document.getElementById('uploadButton').addEventListener('click', function() {
+    const uploadForm = document.getElementById('uploadForm');
+    uploadForm.classList.toggle('hidden'); // Show or hide the upload form
+  });
+</script>

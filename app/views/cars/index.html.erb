@@ -1,0 +1,50 @@
+<!-- app/views/cars/index.html.erb -->
+
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-semibold text-center mb-8">Available Cars</h1>
+
+  <!-- Filter Form -->
+  <div class="mb-6">
+    <%= form_with url: cars_path, method: :get, local: true, class: 'flex justify-center space-x-4' do |form| %>
+  <div class="flex items-center">
+    <%= form.label :model, 'Model:', class: 'mr-2' %>
+    <%= form.text_field :model, value: params[:model], class: 'px-4 py-2 border border-gray-300 rounded-md' %>
+  </div>
+
+  <div class="flex items-center">
+    <%= form.label :min_price, 'Min Price:', class: 'mr-2' %>
+    <%= form.number_field :min_price, value: params[:min_price], class: 'px-4 py-2 border border-gray-300 rounded-md' %>
+  </div>
+
+  <div class="flex items-center">
+    <%= form.label :max_price, 'Max Price:', class: 'mr-2' %>
+    <%= form.number_field :max_price, value: params[:max_price], class: 'px-4 py-2 border border-gray-300 rounded-md' %>
+  </div>
+
+  <div class="flex items-center">
+    <%= form.label :manufactured_year, 'Manufactured Year:', class: 'mr-2' %>
+    <%= form.select :manufactured_year, options_for_select(@manufactured_years, params[:manufactured_year]), prompt: 'Select Year', class: 'px-4 py-2 border border-gray-300 rounded-md' %>
+  </div>
+
+  <%= form.submit 'Filter', class: 'bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200' %>
+<% end %>
+  </div>
+
+  <!-- Grid layout for cars -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <% @cars.each do |car| %>
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <%= image_tag car.image.attached? ? url_for(car.image) : (Rails.application.assets.find_asset(car.name)!=nil ? asset_path(car.name) : asset_path("No_Image_Available.jpg")), class: "w-full h-48 object-cover" %>
+        
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-gray-800"><%= car.model %></h3>
+          <p class="text-gray-600">Manufactured Year: <%= car.manufactured_year.strftime("%Y") %></p>
+          <p class="text-gray-600">Price: $<%= car.price_per_day %> per day</p>
+          
+          <!-- Link to the booking form with car_id -->
+          <%= link_to 'Book Now', new_booking_path(car_id: car.id), class: 'mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

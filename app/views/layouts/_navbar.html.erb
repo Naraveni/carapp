@@ -1,0 +1,31 @@
+<nav class="bg-gray-800 p-4">
+  <div class="flex justify-between items-center max-w-7xl mx-auto">
+    <!-- Car Logo -->
+    <div class="flex items-center">
+      <img src="<%= asset_path('carlogo.avif') %>" alt="Car Logo" class="h-6 w-10 mr-2">
+      <span class="text-white text-lg font-semibold">Car Management</span>
+      
+    </div>
+    <div class="flex justify-items-start pr-96">
+      <%if current_user %>%
+      <%= link_to 'Browse Cars', cars_path, class: 'text-white hover:text-gray-400 mr-5'%>
+      <%= link_to 'My Bookings', bookings_path, class: 'text-white hover:text-gray-400 mr-5'%>
+      <%end%>
+      <%if current_user && current_user.permission == 'ADMIN'%>
+      <%= link_to 'Add car', new_car_path, class: 'text-white hover:text-gray-400'%>
+      <%= link_to 'Admin DashBoard', admin_dashboard_path, class: 'text-white hover:text-gray-400 pl-5'%>
+      <%= link_to 'Bulk Upload', upload_cars_path, class: 'text-white hover:text-gray-400 pl-5'%>
+      <%end%>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex items-center space-x-4">
+      <% if user_signed_in? %>
+        <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'text-white hover:text-gray-400' %>
+      <% else %>
+        <%= link_to 'Login', new_user_session_path, method: :delete, class: 'text-white hover:text-blue-400'%>
+        <%= link_to 'Register', new_user_registration_path, class: 'text-white hover:text-gray-400' %>
+      <% end %>
+    </div>
+  </div>
+</nav>

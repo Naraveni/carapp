@@ -1,0 +1,14 @@
+
+<p>Hello <%= @user.email %>,</p>
+
+<p>Your booking for the <%= @car.model %> has been confirmed.</p>
+
+<p>Booking Details:</p>
+<ul>
+  <li><strong>Start Date:</strong> <%= @booking.start_date %></li>
+  <li><strong>End Date:</strong> <%= @booking.end_date %></li>
+  <li><strong>Pick-up Spot:</strong> <%= @booking.pick_up_spot %></li>
+  <li><strong>Insurance Per Day:</strong> <%= @booking.insurance_per_day %></li>
+</ul>
+
+<p>Thank you for booking with us!</p>

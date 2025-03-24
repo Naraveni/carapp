@@ -1,0 +1,14 @@
+<% content_for :title, "New Car" %>
+
+<div class="flex justify-center items-center h-max bg-gray-100">
+  <div class=" shadow-lg rounded-lg w-full max-w-lg">
+    <h1 class="font-bold text-4xl text-center mb-2">New Car</h1>
+    <div class="text-left">
+      <%= link_to "Back to Cars", cars_path, class: "rounded-md px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium inline-block" %>
+    </div>
+
+    <%= render "form", car: @car %>
+
+    
+  </div>
+</div>

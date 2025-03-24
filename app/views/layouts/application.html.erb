@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CarManagementApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Include Tailwind CSS -->
+    <%= stylesheet_link_tag 'tailwind', 'data-turbo-track': 'reload' %>
+    
+    <!-- Include application styles -->
+    <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload' %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <%= render 'layouts/navbar' %>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <%= yield %>
+  </body>
+</html>
