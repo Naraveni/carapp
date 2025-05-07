@@ -1,6 +1,6 @@
 class BookingsController < ApplicationController
-  before_action :set_car, only: [:new, :create]
-  before_action :set_booking, only: [:edit, :update]
+  before_action :set_car, only: %i[new create]
+  before_action :set_booking, only: %i[edit update]
 
   def new
     @booking = Booking.new
@@ -12,7 +12,7 @@ class BookingsController < ApplicationController
     if @booking.save
       @car = @booking.car
       @car.update(status: 1) # Update car status to "booked"
-      
+
       # Send confirmation email
       BookingMailer.send_confirmation_email(@booking).deliver_now
 
@@ -23,12 +23,16 @@ class BookingsController < ApplicationController
   end
 
   def index
-    @bookings = current_user.bookings
+    @bookings = if params[:status] == 'pending'
+                  Booking.all.includes(:reviews)
+                else
+                  current_user.bookings.includes(:reviews)
+                end
     render :index
   end
 
   def edit
-    @booking = Booking.find(params["id"])
+    @booking = Booking.find(params['id'])
     @car = Car.find(@booking.car_id)
   end
 

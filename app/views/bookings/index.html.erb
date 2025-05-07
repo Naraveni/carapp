@@ -11,6 +11,7 @@
           <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">End Date</th>
           <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total Cost</th>
           <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Modify Booking</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Add Review</th>
         </tr>
       </thead>
 
@@ -31,7 +32,42 @@
                 <span class="text-red-500">Cannot modify, booking has started</span>
               <% end %>
             </td>
+            <td class="px-4 py-2 text-sm text-gray-700">
+              <% if booking.start_date <= Date.today %>
+                <button onclick="toggleReviewForm(<%= booking.id %>)" class="text-green-500 hover:underline">
+                  Add Review
+                </button>
+                <div id="review-form-<%= booking.id %>" class="mt-2 hidden">
+                  <%= form_with url: reviews_path, method: :post, local: true do |form| %>
+                    <%= form.hidden_field :booking_id, value: booking.id %>
+                    <%= form.text_area :response, rows: 2, class: "w-full border rounded p-2", placeholder: "Write your review..." %>
+                    <%= form.submit "Submit Review", class: "mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600" %>
+                  <% end %>
+                </div>
+              <% else %>
+                <span class="text-gray-400">You can review after the booking starts</span>
+              <% end %>
+            </td>
           </tr>
+
+          <% if booking.reviews.any? %>
+            <tr>
+  <td colspan="7">
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 my-2 shadow-sm">
+      <h3 class="text-base font-semibold text-blue-700 mb-2">Reviews</h3>
+      <ul class="list-disc list-inside space-y-1">
+        <% booking.reviews.each do |review| %>
+          <li class="text-gray-800">
+            <span class="italic"><%= review.response %></span>
+            <span class="text-xs text-gray-500 ml-2">— <%= review.created_at.strftime('%b %d, %Y') %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </td>
+</tr>
+
+          <% end %>
         <% end %>
       </tbody>
     </table>
@@ -39,3 +75,12 @@
     <p class="text-center text-gray-600">You have no bookings yet.</p>
   <% end %>
 </div>
+
+<script>
+  function toggleReviewForm(bookingId) {
+    const form = document.getElementById(`review-form-${bookingId}`);
+    if (form) {
+      form.classList.toggle('hidden');
+    }
+  }
+</script>

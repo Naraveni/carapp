@@ -9,6 +9,7 @@
     <div class="flex justify-items-start pr-96">
       <%if current_user %>%
       <%= link_to 'Browse Cars', cars_path, class: 'text-white hover:text-gray-400 mr-5'%>
+      <%= link_to 'All Bookings', bookings_path(status: 'pending'), class: 'text-white hover:text-gray-400 mr-5'%>
       <%= link_to 'My Bookings', bookings_path, class: 'text-white hover:text-gray-400 mr-5'%>
       <%end%>
       <%if current_user && current_user.permission == 'ADMIN'%>
